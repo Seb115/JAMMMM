@@ -12,6 +12,7 @@ public class Firstboss : MonoBehaviour
     public FirstBossAggro aggroRange;
     public FirstAttackRadius attackRadius;
     public ThirdPersonController player;
+    public FirstDamageRadius Damagerad;
 
     public GameObject Player, Attackrad;
 
@@ -21,6 +22,7 @@ public class Firstboss : MonoBehaviour
         Player = GameObject.FindWithTag("Player");
         Attackrad = GameObject.Find("FirstAttack");
         player = Player.GetComponent<ThirdPersonController>();
+
     }
 
     // Update is called once per frame
@@ -45,13 +47,8 @@ public class Firstboss : MonoBehaviour
             speed = 1.0f;
         }
 
-        if (contactwithPlayer)
-        {
-            speed = 0.0f;
-        }
-        
 
-        if (aggroRange.Aggro == true)
+        if (aggroRange.Aggro == true && !contactwithPlayer)
         {
             var step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, step);
@@ -59,31 +56,10 @@ public class Firstboss : MonoBehaviour
 
         transform.position = new Vector3(transform.position.x, 6.0f, transform.position.z);
 
-
-
-    }
-
-    public void Attack()
-    {
-        
-    }
-
-    private void OnCollisionEnter(Collision other) 
-    {
-        if (other.gameObject.tag == "Player")
+        if (Damagerad.damaged)
         {
             player.Hp -= 1.0f;
-            contactwithPlayer = true;
-
-        }
-        Debug.Log("biem");
-    }
-
-    private void OnCollisionExit(Collision other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-            contactwithPlayer = false;
+            Damagerad.damaged = false;
         }
     }
 }
